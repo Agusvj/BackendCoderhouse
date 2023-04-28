@@ -35,9 +35,7 @@ export class ProductManager {
       this.#isValid(code) &&
       this.#isNumValid(stock)
     ) {
-      const isCodeRepeated = this.#verifyCode(code);
-
-      if (isCodeRepeated === true) {
+      if (this.#verifyCode(code)) {
         console.log("ERROR: Codigo repetido");
       } else {
         let product = {
