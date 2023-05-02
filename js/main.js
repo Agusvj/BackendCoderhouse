@@ -5,12 +5,33 @@ export class ProductManager {
 
   static id = 0;
 
-  #isValid(val) {
-    return val !== "" && val !== undefined && val !== null;
+  #validateStringField(key, product) {
+    if (!product[key]) {
+      throw new Error(`Error: Field ${key} is required`);
+    } else if (
+      product[key] === "" ||
+      product[key] === undefined ||
+      product[key] === null
+    ) {
+      throw new Error(`Error: Field ${key} is invalid`);
+    } else {
+      return true;
+    }
   }
 
-  #isNumValid(val) {
-    return parseInt(val) === Number(val);
+  #validateNumberField(key, product) {
+    if (!product[key]) {
+      throw new Error(`Error: Field ${key} is required`);
+    } else if (
+      product[key] === NaN ||
+      product[key] === undefined ||
+      product[key] === null ||
+      product[key] < 0
+    ) {
+      throw new Error(`Error: Field ${key} is invalid`);
+    } else {
+      return true;
+    }
   }
 
   #generateId() {
@@ -26,32 +47,28 @@ export class ProductManager {
     return verifyCode;
   }
 
-  addProduct(title, description, price, thumbnail, code, stock) {
-    if (
-      this.#isValid(title) &&
-      this.#isValid(description) &&
-      this.#isNumValid(price) &&
-      this.#isValid(thumbnail) &&
-      this.#isValid(code) &&
-      this.#isNumValid(stock)
-    ) {
-      if (this.#verifyCode(code)) {
-        console.log("ERROR: Codigo repetido");
-      } else {
-        let product = {
-          title: title,
-          description: description,
-          price: price,
-          thumbnail: thumbnail,
-          code: code,
-          stock: stock,
-          id: this.#generateId(),
-        };
+  addProduct(addedProduct) {
+    this.#validateStringField("title", addedProduct);
+    this.#validateStringField("description", addedProduct);
+    this.#validateNumberField("price", addedProduct);
+    this.#validateStringField("thumbnail", addedProduct);
+    this.#validateStringField("code", addedProduct);
+    this.#validateNumberField("stock", addedProduct);
 
-        this.products.push(product);
-      }
+    if (this.#verifyCode(addedProduct.code)) {
+      throw new Error("CODE repeated");
     } else {
-      console.log("error");
+      let product = {
+        title: addedProduct.title,
+        description: addedProduct.description,
+        price: addedProduct.price,
+        thumbnail: addedProduct.thumbnail,
+        code: addedProduct.code,
+        stock: addedProduct.stock,
+        id: this.#generateId(),
+      };
+
+      this.products.push(product);
     }
   }
 
@@ -62,8 +79,8 @@ export class ProductManager {
   getProductById(id) {
     let foundProduct = this.products.find((product) => product.id === id);
 
-    if (foundProduct === undefined) {
-      return "Not Found";
+    if (!foundProduct) {
+      throw new Error("Product ID not found");
     } else {
       return foundProduct;
     }

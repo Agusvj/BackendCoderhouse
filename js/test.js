@@ -4,25 +4,29 @@ const productManager = new ProductManager();
 
 console.log(productManager.getProducts());
 
-productManager.addProduct(
-  "Producto Prueba",
-  "Este es un producto prueba",
-  200,
-  "Sin imagen",
-  "abc123",
-  25
-);
+const addedProduct = {
+  title: "Producto Prueba",
+  description: "Este es un producto prueba",
+  price: 200,
+  thumbnail: "Sin imagen",
+  code: "abc123",
+  stock: 25,
+};
 
-productManager.addProduct(
-  "Producto Prueba",
-  "Este es un producto prueba",
-  200,
-  "Sin imagen",
-  "abc123",
-  25
-);
+productManager.addProduct(addedProduct);
+
+try {
+  productManager.addProduct(addedProduct);
+} catch (error) {
+  console.log(error);
+}
 
 console.log(productManager.getProducts());
 
 console.log(productManager.getProductById(1));
-console.log(productManager.getProductById(4));
+
+try {
+  console.log(productManager.getProductById(4));
+} catch (error) {
+  console.log(error);
+}
