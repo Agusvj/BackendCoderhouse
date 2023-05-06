@@ -1,6 +1,13 @@
+import * as fs from "fs";
+
 export class ProductManager {
   constructor() {
     this.products = [];
+    this.path = "products.json";
+    this.products = JSON.parse(fs.readFileSync(this.path, "utf-8"));
+    if (this.products.length > 0) {
+      ProductManager.id = this.products[this.products.length - 1];
+    }
   }
 
   static id = 0;
@@ -20,11 +27,10 @@ export class ProductManager {
   }
 
   #validateNumberField(key, product) {
-    if (!product[key]) {
+    if (product[key] === undefined) {
       throw new Error(`Error: Field ${key} is required`);
     } else if (
       product[key] === NaN ||
-      product[key] === undefined ||
       product[key] === null ||
       product[key] < 0
     ) {
@@ -69,11 +75,14 @@ export class ProductManager {
       };
 
       this.products.push(product);
+      let productsString = JSON.stringify(this.products);
+      fs.writeFileSync(this.path, productsString);
     }
   }
 
   getProducts() {
-    return this.products;
+    let products = JSON.parse(fs.readFileSync(this.path, "utf-8"));
+    return products;
   }
 
   getProductById(id) {
@@ -83,6 +92,39 @@ export class ProductManager {
       throw new Error("Product ID not found");
     } else {
       return foundProduct;
+    }
+  }
+
+  updateProduct(id, product) {
+    this.#validateStringField("title", product);
+    this.#validateStringField("description", product);
+    this.#validateNumberField("price", product);
+    this.#validateStringField("thumbnail", product);
+    this.#validateStringField("code", product);
+    this.#validateNumberField("stock", product);
+
+    let productIndex = this.products.findIndex((product) => product.id === id);
+
+    if (productIndex === -1) {
+      throw new Error("Product ID not found");
+    } else {
+      let oldProduct = this.products[productIndex];
+      let newProduct = { ...oldProduct, ...product };
+      this.products[productIndex] = newProduct;
+      let productsString = JSON.stringify(this.products);
+      fs.writeFileSync(this.path, productsString);
+    }
+  }
+
+  deleteProduct(id) {
+    let productIndex = this.products.findIndex((product) => product.id === id);
+
+    if (productIndex === -1) {
+      throw new Error("Product ID not found");
+    } else {
+      this.products.splice(productIndex, 1);
+      let productsString = JSON.stringify(this.products);
+      fs.writeFileSync(this.path, productsString);
     }
   }
 }
