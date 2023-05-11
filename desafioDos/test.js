@@ -5,7 +5,7 @@ const productManager = new ProductManager();
 console.log(productManager.getProducts());
 
 const addedProduct = {
-  title: "Producto Prueba",
+  title: "Producto prueba",
   description: "Este es un producto prueba",
   price: 200,
   thumbnail: "Sin imagen",
@@ -26,12 +26,9 @@ try {
 }
 
 productManager.updateProduct(1, {
-  title: "producto modificado",
+  title: "Producto modificado",
   description: "Este es un producto modificado",
-  price: 400,
-  thumbnail: "Sin imagen",
-  code: "abc123",
-  stock: 23,
+  price: 15,
 });
 
 productManager.deleteProduct(1);

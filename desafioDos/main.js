@@ -2,11 +2,14 @@ import * as fs from "fs";
 
 export class ProductManager {
   constructor() {
+    if (!fs.existsSync("products.json")) {
+      fs.writeFileSync("products.json", "[]", "utf-8");
+    }
     this.products = [];
     this.path = "products.json";
     this.products = JSON.parse(fs.readFileSync(this.path, "utf-8"));
     if (this.products.length > 0) {
-      ProductManager.id = this.products[this.products.length - 1];
+      ProductManager.id = this.products[this.products.length - 1].id;
     }
   }
 
@@ -18,7 +21,8 @@ export class ProductManager {
     } else if (
       product[key] === "" ||
       product[key] === undefined ||
-      product[key] === null
+      product[key] === null ||
+      typeof product[key] !== "string"
     ) {
       throw new Error(`Error: Field ${key} is invalid`);
     } else {
@@ -96,12 +100,33 @@ export class ProductManager {
   }
 
   updateProduct(id, product) {
-    this.#validateStringField("title", product);
-    this.#validateStringField("description", product);
-    this.#validateNumberField("price", product);
-    this.#validateStringField("thumbnail", product);
-    this.#validateStringField("code", product);
-    this.#validateNumberField("stock", product);
+    let newProductFields = Object.keys(product);
+
+    newProductFields.forEach((field) => {
+      if (
+        field === "title" ||
+        field === "description" ||
+        field === "price" ||
+        field === "thumbnail" ||
+        field === "code" ||
+        field === "stock"
+      ) {
+        if (
+          field === "title" ||
+          field === "description" ||
+          field === "thumbnail" ||
+          field === "code"
+        ) {
+          this.#validateStringField(field, product);
+        }
+
+        if (field === "price" || field === "stock") {
+          this.#validateNumberField(field, product);
+        }
+      } else {
+        throw new Error("Invalid field");
+      }
+    });
 
     let productIndex = this.products.findIndex((product) => product.id === id);
 
