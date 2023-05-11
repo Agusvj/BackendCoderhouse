@@ -29,6 +29,7 @@ productManager.updateProduct(1, {
   title: "Producto modificado",
   description: "Este es un producto modificado",
   price: 15,
+  code: "asdasdasd",
 });
 
 productManager.deleteProduct(1);

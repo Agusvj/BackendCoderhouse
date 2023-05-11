@@ -114,14 +114,18 @@ export class ProductManager {
         if (
           field === "title" ||
           field === "description" ||
-          field === "thumbnail" ||
-          field === "code"
+          field === "thumbnail"
         ) {
           this.#validateStringField(field, product);
         }
 
         if (field === "price" || field === "stock") {
           this.#validateNumberField(field, product);
+        }
+
+        if (field === "code") {
+          this.#validateStringField(field, product);
+          this.#verifyCode(field, product);
         }
       } else {
         throw new Error("Invalid field");
