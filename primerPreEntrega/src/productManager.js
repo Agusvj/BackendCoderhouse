@@ -77,6 +77,7 @@ export class ProductManager {
           thumbnail: addedProduct.thumbnail,
           code: addedProduct.code,
           stock: addedProduct.stock,
+          status: true,
           category: addedProduct.category,
           id: this.#generateId(),
         };
@@ -113,6 +114,9 @@ export class ProductManager {
       let newProductFields = Object.keys(product);
 
       newProductFields.forEach((field) => {
+        if (field === "id") {
+          reject(new Error("Product ID cannot be updated"));
+        }
         if (
           field === "title" ||
           field === "description" ||
@@ -134,7 +138,7 @@ export class ProductManager {
             this.#validateNumberField(field, product);
           }
         } else {
-          throw new Error("Invalid field");
+          reject(new Error("Product field not valid"));
         }
       });
 
