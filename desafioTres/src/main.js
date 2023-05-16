@@ -45,7 +45,7 @@ export class ProductManager {
   }
 
   #generateId() {
-    ProductManager.id = ProductManager.id + 1;
+    ProductManager.id = JSON.parse(ProductManager.id) + 1;
 
     return ProductManager.id;
   }

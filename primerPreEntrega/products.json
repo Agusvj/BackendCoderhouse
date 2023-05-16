@@ -1,0 +1,22 @@
+[
+  {
+    "title": "producto prueba",
+    "description": "descripcion de producto",
+    "price": 12000,
+    "thumbnail": "/aaaa",
+    "code": "abn124",
+    "stock": 10,
+    "category": "categoria",
+    "id": 2
+  },
+  {
+    "title": "producto prueba",
+    "description": "descripcion de producto",
+    "price": 12000,
+    "thumbnail": "/aaaa",
+    "code": "abn126",
+    "stock": 10,
+    "category": "categoria",
+    "id": 3
+  }
+]
