@@ -2,11 +2,11 @@ import * as fs from "fs";
 
 export class ProductManager {
   constructor() {
-    if (!fs.existsSync("./primerPreEntrega/products.json")) {
-      fs.writeFileSync("./primerPreEntrega/products.json", "[]", "utf-8");
+    if (!fs.existsSync("./segundaPreEntrega/products.json")) {
+      fs.writeFileSync("./segundaPreEntrega/products.json", "[]", "utf-8");
     }
     this.products = [];
-    this.path = "./primerPreEntrega/products.json";
+    this.path = "./segundaPreEntrega/products.json";
     this.products = JSON.parse(fs.readFileSync(this.path, "utf-8"));
     if (this.products.length > 0) {
       ProductManager.id = this.products[this.products.length - 1].id;
