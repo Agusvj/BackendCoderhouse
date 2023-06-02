@@ -28,7 +28,14 @@ socketServer.on("connection", async (socket) => {
   console.log("Nuevo cliente conectado");
   const products = await productManager.getProducts();
   socket.emit("products", products);
+
+  socket.on("formSubmission", async (data) => {
+    await productManager.addProduct(data);
+    const products = await productManager.getProducts();
+    socketServer.sockets.emit("products", products);
+  });
 });
+
 app.use("/api/products", productManagerRouter);
 
 app.use("/api/carts", cartsRouter);

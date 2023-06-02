@@ -63,6 +63,10 @@ export class ProductManager {
       this.#validateStringField("title", addedProduct);
       this.#validateStringField("description", addedProduct);
       this.#validateNumberField("price", addedProduct);
+      JSON.stringify(addedProduct.thumbnails);
+      let thumbnails = addedProduct.thumbnails;
+      let arrayThumbnails = thumbnails.split(",");
+      addedProduct.thumbnails = arrayThumbnails;
       addedProduct.thumbnails.forEach((thumbnail) => {
         if (
           thumbnail === "" ||
