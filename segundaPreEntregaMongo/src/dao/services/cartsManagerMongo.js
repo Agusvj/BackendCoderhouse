@@ -56,4 +56,31 @@ export class CartManagerMongo {
       throw new Error(error);
     }
   }
+
+  async deleteProductFromCart(cId, pId) {
+    try {
+      const productToDelete = await productManagerMongo.getProductById(pId);
+
+      if (!productToDelete) {
+        throw new Error("Product not found");
+      }
+
+      let cart = await cartsModel.findOneAndUpdate(
+        { _id: cId, "products.pId": productToDelete._id },
+        {
+          $inc: { "products.$.quantity": -1 },
+        }
+      );
+    } catch (error) {
+      throw new Error(error);
+    }
+  }
+
+  async deleteAllProductsFromCart(cId) {
+    try {
+      await cartsModel.findByIdAndUpdate(cId, { products: [] });
+    } catch (error) {
+      throw new Error(error);
+    }
+  }
 }
