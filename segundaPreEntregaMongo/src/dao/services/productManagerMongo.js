@@ -63,10 +63,19 @@ export class ProductManagerMongo {
   }
 
   async getProducts({ limit = 10, page, sort, query }) {
-    const allProducts = await productsModel.paginate(
-      {},
-      { page: page || 1, limit: limit || 10, sort: sort }
-    );
+    const filter = {};
+
+    if (query) {
+      filter.category = query;
+    }
+
+    const options = {
+      page: page || 1,
+      limit: limit || 10,
+      sort: sort ? { price: sort === "asc" ? 1 : -1 } : undefined,
+    };
+
+    const allProducts = await productsModel.paginate(filter, options);
 
     return allProducts;
   }

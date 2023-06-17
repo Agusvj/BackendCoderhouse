@@ -1,0 +1,25 @@
+<div class="main">
+
+  <h1>Tu carrito</h1>
+
+  <hr />
+  <hr />
+
+  {{#each p}}
+
+    <p>Nombre producto {{this.name}}</p>
+
+    <p>Precio unitario: $${{this.price}}</p>
+
+    <p>Cantidad: x{{this.quantity}}</p>
+
+    <hr />
+    <hr />
+
+  {{/each}}
+
+  <p>Precio total: $${{totalPrice}}</p>
+
+  <a href="http://localhost:8080/products">Back to Products</a>
+
+</div>

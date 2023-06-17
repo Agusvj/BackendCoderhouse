@@ -1,0 +1,40 @@
+<div class="main">
+  <h1>Welcome Adventurer!</h1>
+
+  <div class="shop">
+
+    {{#each p}}
+
+      <div class="containers">
+        <p>Name: {{this.name}}</p>
+
+        <p>Description: {{this.description}}</p>
+
+        <p>Price: {{this.price}}</p>
+
+        <button>Add To pouch</button>
+
+        <a href="http://localhost:8080/productDetail/{{this._id}}">More Details</a>
+
+      </div>
+    {{/each}}
+  </div>
+
+  <div class="botonera">
+    {{this.pagingCounter}}
+    {{totalPages}}
+
+    <hr />
+    <hr />
+
+    {{prevPage}}
+    {{#if hasPrevPage}}
+      <a href="http://localhost:8080/products/?page={{prevPage}}">⬅️</a>
+    {{/if}}
+    {{page}}
+    {{#if hasNextPage}}
+      <a href="http://localhost:8080/products/?page={{nextPage}}">➡️</a>
+    {{/if}}
+    {{nextPage}}
+  </div>
+</div>

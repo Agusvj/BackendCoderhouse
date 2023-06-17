@@ -1,7 +1,7 @@
-<div>
-  <h1>Nuestros Productos</h1>
+<div class="main">
+  <h1>Welcome Adventurer!</h1>
   {{#each p}}
-    <div style="width: 250px; padding: 15px; border: solid 3px; margin: 15px;">
+    <div class="containers">
       <p>{{this.name}}</p>
 
       <p>{{this.description}}</p>
@@ -10,21 +10,4 @@
 
     </div>
   {{/each}}
-  <div>
-    {{this.pagingCounter}}
-    {{totalPages}}
-
-    <hr />
-    <hr />
-
-    {{prevPage}}
-    {{#if hasPrevPage}}
-      <a href="http://localhost:8080/?page={{prevPage}}">⬅️</a>
-    {{/if}}
-    {{page}}
-    {{#if hasNextPage}}
-      <a href="http://localhost:8080/?page={{nextPage}}">➡️</a>
-    {{/if}}
-    {{nextPage}}
-  </div>
 </div>
