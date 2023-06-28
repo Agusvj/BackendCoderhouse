@@ -1,5 +1,7 @@
 <div class="main">
-  <h1>Welcome Adventurer!</h1>
+  <h1>Welcome {{session.sessionDataName}}, eres un {{session.sessionAuth}}!</h1>
+
+  <a href="/logout" class="logOut">LogOut</a>
 
   <div class="shop">
 
@@ -37,4 +39,5 @@
     {{/if}}
     {{nextPage}}
   </div>
+
 </div>

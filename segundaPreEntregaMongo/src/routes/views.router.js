@@ -3,6 +3,7 @@ import { Router } from "express";
 import { ProductManagerMongo } from "../dao/services/productManagerMongo.js";
 import { CartManagerMongo } from "../dao/services/cartsManagerMongo.js";
 import { productsModel } from "../dao/models/products.model.js";
+import { checkAdmin, checkUser } from "../middlewares/auth.js";
 
 const productManagerMongo = new ProductManagerMongo();
 const cartManagerMongo = new CartManagerMongo();
@@ -13,22 +14,19 @@ viewsRouter.use(express.json());
 viewsRouter.use(express.urlencoded({ extended: true }));
 
 viewsRouter.get("/", async (req, res) => {
-  const allProducts = await productManagerMongo.getProducts(req.query);
-
-  res.status(200).render("home", {
-    style: "css/styles.css",
-    p: allProducts.docs.map((product) => ({
-      name: product.name,
-      description: product.description,
-      price: product.price,
-    })),
-
-    // ...allProducts,
-  });
+  res.render("login");
 });
 
 viewsRouter.get("/products", async (req, res) => {
   const allProducts = await productManagerMongo.getProducts(req.query);
+
+  let sessionDataName = req.session.first_name;
+  let sessionAuth = req.session.admin;
+  if (sessionAuth) {
+    sessionAuth = "Admin";
+  } else {
+    sessionAuth = "User";
+  }
 
   res.status(200).render("products", {
     style: "../css/styles.css",
@@ -45,8 +43,10 @@ viewsRouter.get("/products", async (req, res) => {
     hasNextPage: allProducts.hasNextPage,
     prevPage: allProducts.prevPage,
     nextPage: allProducts.nextPage,
-
-    // ...allProducts,
+    session: {
+      sessionAuth: sessionAuth,
+      sessionDataName: sessionDataName,
+    },
   });
 });
 
@@ -75,7 +75,6 @@ viewsRouter.get("/carts/:cid", async (req, res) => {
     (acc, product) => acc + product.quantity * product.product.price,
     0
   );
-  console.log(totalPrice);
 
   res.status(200).render("cartDetail", {
     style: "styles.css",
@@ -94,4 +93,25 @@ viewsRouter.get("/realtimeproducts", async (req, res) => {
 
 viewsRouter.get("/chat", async (req, res) => {
   res.render("chat", {});
+});
+
+viewsRouter.get("/login", async (req, res) => {
+  res.render("login");
+});
+
+viewsRouter.get("/logout", async (req, res) => {
+  req.session.destroy((err) => {
+    if (err) {
+      return res.json({ status: "Logout error", body: err });
+    }
+    res.redirect("/login");
+  });
+});
+
+viewsRouter.get("/register", async (req, res) => {
+  res.render("register");
+});
+
+viewsRouter.get("/profile", checkUser, async (req, res) => {
+  res.render("profile");
 });

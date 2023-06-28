@@ -8,7 +8,26 @@ import { cartsRouter } from "./routes/carts.router.js";
 import { viewsRouter } from "./routes/views.router.js";
 import { Server } from "socket.io";
 import { connectMongo } from "./utils.js";
+import { loginRouter } from "./routes/login.router.js";
+import cookieParser from "cookie-parser";
+import session from "express-session";
+import MongoStore from "connect-mongo";
+
 const app = express();
+app.use(cookieParser());
+app.use(
+  session({
+    store: MongoStore.create({
+      mongoUrl:
+        "mongodb+srv://agusvj:7C2af80b2e53asd@cluster0.gjhmyvj.mongodb.net/ecommerce?retryWrites=true&w=majority",
+      mongoOptions: { useNewUrlParser: true, useUnifiedTopology: true },
+      ttl: 15,
+    }),
+    secret: "secretCoder",
+    resave: true,
+    saveUninitialized: true,
+  })
+);
 const port = 8080;
 
 connectMongo();
@@ -53,6 +72,8 @@ socketServer.on("connection", async (socket) => {
 app.use("/api/products", productManagerRouter);
 
 app.use("/api/carts", cartsRouter);
+
+app.use("/api/sessions", loginRouter);
 
 app.get("*", (req, res) => {
   res.status(404).send({ status: "error", data: "Page not found" });

@@ -79,3 +79,18 @@ a {
     border-radius: 10px;
     border: 1px solid rgba(255, 255, 255, 0.597);
 }
+
+.logOut {
+    border-radius: 10px;
+    background-color: burlywood;
+    padding: 15px 25px;
+    margin-bottom: 15px;
+    text-decoration: none;
+    color: black;
+}
+
+.logOut:hover {
+    transform: scale(1.05);
+    transition: all 0.5s ease-in-out;
+    font-weight: bold;
+}
