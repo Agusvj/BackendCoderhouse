@@ -1,60 +1,94 @@
 import express from "express";
-import { userModel } from "../dao/models/users.model.js";
+import passport from "passport";
 
 export const loginRouter = express.Router();
 
-loginRouter.post("/register", async (req, res) => {
-  const { first_name, last_name, email, age, password } = req.body;
-  if (!first_name || !last_name || !email || !age || !password) {
-    return res.status(400).json({ message: "Missing fields" });
-  }
-  try {
-    await userModel.create({
-      first_name,
-      last_name,
-      email,
-      age,
-      password,
-    });
-
-    req.session.first_name = first_name;
-    req.session.email = email;
-    req.session.admin = false;
-
-    if (email === "adminCoder@coder.com" && password === "adminCod3r123") {
-      req.session.admin = true;
-    }
-
-    return res.status(201).redirect("/products");
-  } catch (error) {
-    return res.status(500).json({ message: error.message });
-  }
+loginRouter.get("/session", (req, res) => {
+  return res.send(JSON.stringify(req.session));
 });
 
-loginRouter.post("/login", async (req, res) => {
-  const { email, password } = req.body;
-  if (!email || !password) {
-    return res.status(400).json({ message: "Missing fields" });
-  }
-  try {
-    const user = await userModel.findOne({ email });
-
-    if (user && user.password === password) {
-      req.session.first_name = user.first_name;
-      req.session.email = user.email;
-      req.session.admin = false;
-      if (
-        user.email === "adminCoder@coder.com" &&
-        user.password === "adminCod3r123"
-      ) {
-        req.session.admin = true;
-      }
-
-      return res.redirect("/products");
-    } else {
-      return res.status(400).json({ message: "Invalid credentials" });
-    }
-  } catch (error) {
-    return res.status(500).json({ message: error.message });
-  }
+loginRouter.get("/register", (req, res) => {
+  return res.render("register", {});
 });
+
+loginRouter.post(
+  "/register",
+  passport.authenticate("register", {
+    failureRedirect: "api/sessions/failregister",
+  }),
+  (req, res) => {
+    if (!req.user) {
+      return res.json({ error: "something went wrong" });
+    }
+    req.session.user = {
+      _id: req.user._id,
+      email: req.user.email,
+      firstName: req.user.firstName,
+      lastName: req.user.lastName,
+      isAdmin: req.user.isAdmin,
+    };
+
+    return res.redirect("/products");
+  }
+);
+
+loginRouter.get("/failregister", (req, res) => {
+  return res.send({ error: "Fail to register" });
+});
+
+loginRouter.get("/login", (req, res) => {
+  return res.render("login", {});
+});
+
+loginRouter.post(
+  "/login",
+  passport.authenticate("login", {
+    failureRedirect: "/api/sessions/faillogin",
+  }),
+  async (req, res) => {
+    if (!req.user) {
+      return res.json({ error: "invalid credentials" });
+    }
+    req.session.user = {
+      _id: req.user._id,
+      email: req.user.email,
+      firstName: req.user.firstName,
+      lastName: req.user.lastName,
+      isAdmin: req.user.isAdmin,
+    };
+    return res.redirect("/products");
+  }
+);
+
+loginRouter.get("/faillogin", (req, res) => {
+  return res.send({ error: "Fail to login" });
+});
+
+loginRouter.get("logout", (req, res) => {
+  req.session.destroy((err) => {
+    if (err) {
+      return res.status(500).json({ message: err.message });
+    }
+    return res.redirect("/login");
+  });
+});
+
+loginRouter.get(
+  "/github",
+  passport.authenticate("github", { scope: ["user:email"] })
+);
+loginRouter.get(
+  "/githubcallback",
+  passport.authenticate("github", { failureRedirect: "/login" }),
+  (req, res) => {
+    req.session.user = {
+      _id: req.user._id,
+      email: req.user.email,
+      firstName: req.user.firstName,
+      lastName: req.user.lastName,
+      isAdmin: req.user.isAdmin,
+    };
+    // Successful authentication, redirect home.
+    res.redirect("/products");
+  }
+);

@@ -3,6 +3,7 @@ import { dirname } from "path";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 import { connect } from "mongoose";
+import bcrypt from "bcrypt";
 
 export default __dirname;
 
@@ -17,3 +18,9 @@ export async function connectMongo() {
     throw new Error("Error de conexión");
   }
 }
+
+export const createHash = (password) =>
+  bcrypt.hashSync(password, bcrypt.genSaltSync(10));
+
+export const isValidPassword = (password, hashPassword) =>
+  bcrypt.compareSync(password, hashPassword);

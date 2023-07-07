@@ -12,6 +12,8 @@ import { loginRouter } from "./routes/login.router.js";
 import cookieParser from "cookie-parser";
 import session from "express-session";
 import MongoStore from "connect-mongo";
+import { initializePassport } from "./config/passport.config.js";
+import passport from "passport";
 
 const app = express();
 app.use(cookieParser());
@@ -68,6 +70,10 @@ socketServer.on("connection", async (socket) => {
     socketServer.sockets.emit("all_msgs", msgs);
   });
 });
+
+initializePassport();
+app.use(passport.initialize());
+app.use(passport.session());
 
 app.use("/api/products", productManagerRouter);
 

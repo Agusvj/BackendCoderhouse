@@ -19,9 +19,10 @@ viewsRouter.get("/", async (req, res) => {
 
 viewsRouter.get("/products", async (req, res) => {
   const allProducts = await productManagerMongo.getProducts(req.query);
+  console.log(req.session);
+  let sessionDataName = req.session.user.firstName;
 
-  let sessionDataName = req.session.first_name;
-  let sessionAuth = req.session.admin;
+  let sessionAuth = req.session.user.admin;
   if (sessionAuth) {
     sessionAuth = "Admin";
   } else {
