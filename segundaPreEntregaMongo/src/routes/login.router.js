@@ -23,9 +23,10 @@ loginRouter.post(
     req.session.user = {
       _id: req.user._id,
       email: req.user.email,
+      age: req.user.age,
       firstName: req.user.firstName,
       lastName: req.user.lastName,
-      isAdmin: req.user.isAdmin,
+      rol: req.user.rol,
     };
 
     return res.redirect("/products");
@@ -54,7 +55,7 @@ loginRouter.post(
       email: req.user.email,
       firstName: req.user.firstName,
       lastName: req.user.lastName,
-      isAdmin: req.user.isAdmin,
+      rol: req.user.rol,
     };
     return res.redirect("/products");
   }
@@ -86,7 +87,7 @@ loginRouter.get(
       email: req.user.email,
       firstName: req.user.firstName,
       lastName: req.user.lastName,
-      isAdmin: req.user.isAdmin,
+      rol: req.user.rol,
     };
     // Successful authentication, redirect home.
     res.redirect("/products");

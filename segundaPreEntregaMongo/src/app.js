@@ -81,6 +81,14 @@ app.use("/api/carts", cartsRouter);
 
 app.use("/api/sessions", loginRouter);
 
+app.use("/api/sessions/current", (req, res) => {
+  return res.status(200).json({
+    status: "success",
+    msg: "User data session",
+    payload: req.session.user || {},
+  });
+});
+
 app.get("*", (req, res) => {
   res.status(404).send({ status: "error", data: "Page not found" });
 });

@@ -22,12 +22,7 @@ viewsRouter.get("/products", async (req, res) => {
   console.log(req.session);
   let sessionDataName = req.session.user.firstName;
 
-  let sessionAuth = req.session.user.admin;
-  if (sessionAuth) {
-    sessionAuth = "Admin";
-  } else {
-    sessionAuth = "User";
-  }
+  let sessionAuth = req.session.user.rol;
 
   res.status(200).render("products", {
     style: "../css/styles.css",
