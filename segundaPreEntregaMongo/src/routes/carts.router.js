@@ -1,110 +1,43 @@
 import { Router } from "express";
 import express from "express";
-import { CartManagerMongo } from "../dao/services/cartsManagerMongo.js";
+import { CartController } from "../controllers/carts.controller.js";
+import { checkOwner } from "../middlewares/auth.js";
+import { purchaseController } from "../controllers/purchase.controller.js";
+
+const cartController = new CartController();
 
 export const cartsRouter = Router();
-
-const cartsManagerMongo = new CartManagerMongo();
 
 cartsRouter.use(express.json());
 cartsRouter.use(express.urlencoded({ extended: true }));
 
-cartsRouter.post("/", async (req, res) => {
-  try {
-    const userCart = await cartsManagerMongo.createCart();
-    res.status(201).send({ status: "success", data: userCart });
-  } catch (error) {
-    res.status(400).send({ status: "error", error: "Cart not created" });
-  }
-});
+cartsRouter.post("/", cartController.createCart);
 
-cartsRouter.get("/:cid", async (req, res) => {
-  try {
-    let cid = req.params.cid;
-    const cartId = await cartsManagerMongo.getCartId(cid);
-    res.status(200).send({ status: "success", data: cartId });
-  } catch (error) {
-    res.status(404).send({ status: "error", error: error.message });
-  }
-});
+cartsRouter.get("/:cid", cartController.getCartId);
 
-cartsRouter.post("/:cid/product/:pid", async (req, res) => {
-  try {
-    let cid = req.params.cid;
-    let pid = req.params.pid;
-    const cartId = await cartsManagerMongo.addProductToCart(cid, pid);
+cartsRouter.post(
+  "/:cid/product/:pid",
+  checkOwner,
+  cartController.addProductToCart
+);
 
-    res
-      .status(200)
-      .send({ status: "success", data: "product added: " + cartId });
-  } catch (error) {
-    res.status(404).send({ status: "error", error: error.message });
-  }
-});
+cartsRouter.put(
+  "/:cid/product/:pid",
+  cartController.updateQuantityProductFromCart
+);
 
-cartsRouter.put("/:cid/product/:pid", async (req, res) => {
-  try {
-    let cid = req.params.cid;
-    let pid = req.params.pid;
-    let body = req.body;
-    const cartId = await cartsManagerMongo.updateQuantityProductFromCart(
-      cid,
-      pid,
-      body
-    );
-    res.status(200).send({ status: "success", data: cartId });
-  } catch (error) {
-    res.status(404).send({ status: "error", error: error.message });
-  }
-});
+cartsRouter.put("/:cid", cartController.updateCartArray);
 
-cartsRouter.put("/:cid", async (req, res) => {
-  try {
-    let cid = req.params.cid;
-    let body = req.body;
-    const cartId = await cartsManagerMongo.updateCartArray(cid, body);
-    res.status(200).send({ status: "success", data: cartId });
-  } catch (error) {
-    res.status(404).send({ status: "error", error: error.message });
-  }
-});
+cartsRouter.delete("/:cid", cartController.deleteAllProductsFromCart);
 
-cartsRouter.delete("/:cid", async (req, res) => {
-  try {
-    const cartId = await cartsManagerMongo.deleteAllProductsFromCart(
-      req.params.cid
-    );
-    res.status(200).send({ status: "success", data: cartId });
-  } catch (error) {
-    res.status(404).send({ status: "error", error: error.message });
-  }
-});
+cartsRouter.delete(
+  "/:cid/product/:pid/quantity",
+  cartController.deleteProductFromCart
+);
 
-cartsRouter.delete("/:cid/product/:pid/quantity", async (req, res) => {
-  try {
-    let cid = req.params.cid;
-    let pid = req.params.pid;
-    const cartId = await cartsManagerMongo.deleteProductFromCart(cid, pid);
+cartsRouter.delete(
+  "/:cid/product/:pid",
+  cartController.deleteProductFromCartComplete
+);
 
-    res
-      .status(200)
-      .send({ status: "success", data: `Product ${pid} removed 1 quantity` });
-  } catch (error) {
-    res.status(404).send({ status: "error", error: error.message });
-  }
-});
-
-cartsRouter.delete("/:cid/product/:pid", async (req, res) => {
-  try {
-    let cid = req.params.cid;
-    let pid = req.params.pid;
-    const cartId = await cartsManagerMongo.deleteProductFromCartComplete(
-      cid,
-      pid
-    );
-
-    res.status(200).send({ status: "success", data: `Product ${pid} removed` });
-  } catch (error) {
-    res.status(404).send({ status: "error", error: error.message });
-  }
-});
+cartsRouter.post("/:cid/purchase", cartController.purchase);

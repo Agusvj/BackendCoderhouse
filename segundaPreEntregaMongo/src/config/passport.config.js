@@ -2,6 +2,7 @@ import passport from "passport";
 import local from "passport-local";
 import { createHash, isValidPassword } from "../utils.js";
 import { userModel } from "../dao/models/users.model.js";
+import { cartsModel } from "../dao/models/carts.model.js";
 const LocalStrategy = local.Strategy;
 import GitHubStrategy from "passport-github2";
 import fetch from "node-fetch";
@@ -13,6 +14,7 @@ export function initializePassport() {
       { usernameField: "email" },
       async (username, password, done) => {
         try {
+          console.log(username, password);
           const user = await userModel.findOne({ email: username });
 
           if (!user) {
@@ -42,12 +44,15 @@ export function initializePassport() {
             return done(null, false, { message: "User already exists" });
           }
 
+          const cart = await cartsModel.create({});
+
           const newUser = {
             email,
             firstName,
             lastName,
             age,
             password: createHash(password),
+            cart: cart._id,
           };
 
           let userCreated = await userModel.create(newUser);
@@ -88,11 +93,13 @@ export function initializePassport() {
 
           let user = await userModel.findOne({ email: profile.email });
           if (!user) {
+            const cart = await cartsModel.create({});
             const newUser = {
               email: profile.email,
               firstName: profile._json.name || profile._json.login || "noname",
               lastName: "externalAuth",
               password: createHash("nopass"),
+              cart: cart._id,
             };
             let userCreated = await userModel.create(newUser);
             console.log("User Registration succesful");

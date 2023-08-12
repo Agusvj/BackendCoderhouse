@@ -2,13 +2,13 @@ import express from "express";
 import handlebars from "express-handlebars";
 import __dirname from "./utils.js";
 import { productManagerRouter } from "./routes/products.router.js";
-import { ProductManagerMongo } from "./dao/services/productManagerMongo.js";
-import { MsgModel } from "./dao/models/msgs.model.js";
+// import { ProductManagerMongo } from "./dao/services/productManagerMongo.js";
+// import { MsgModel } from "./dao/models/msgs.model.js";
 import { cartsRouter } from "./routes/carts.router.js";
 import { viewsRouter } from "./routes/views.router.js";
 import { Server } from "socket.io";
 import { connectMongo } from "./utils.js";
-import { loginRouter } from "./routes/login.router.js";
+import { authRouter } from "./routes/auth.router.js";
 import cookieParser from "cookie-parser";
 import session from "express-session";
 import MongoStore from "connect-mongo";
@@ -23,7 +23,6 @@ app.use(
       mongoUrl:
         "mongodb+srv://agusvj:7C2af80b2e53asd@cluster0.gjhmyvj.mongodb.net/ecommerce?retryWrites=true&w=majority",
       mongoOptions: { useNewUrlParser: true, useUnifiedTopology: true },
-      ttl: 15,
     }),
     secret: "secretCoder",
     resave: true,
@@ -36,7 +35,7 @@ connectMongo();
 
 app.use(express.urlencoded({ extended: true }));
 
-const productManagerMongo = new ProductManagerMongo();
+// const productManagerMongo = new ProductManagerMongo();
 
 const httpServer = app.listen(port, () => {
   console.log(`Server running on port http://localhost:${port}`);
@@ -51,25 +50,25 @@ app.use(express.static(__dirname + "/public"));
 
 app.use("/", viewsRouter);
 
-socketServer.on("connection", async (socket) => {
-  console.log("Nuevo cliente conectado");
-  const products = await productManagerMongo.getProducts();
-  socket.emit("products", products);
-  const msgs = await MsgModel.find({});
-  socketServer.sockets.emit("all_msgs", msgs);
+// socketServer.on("connection", async (socket) => {
+//   console.log("Nuevo cliente conectado");
+//   const products = await productManagerMongo.getProducts();
+//   socket.emit("products", products);
+//   const msgs = await MsgModel.find({});
+//   socketServer.sockets.emit("all_msgs", msgs);
 
-  socket.on("formSubmission", async (data) => {
-    await productManagerMongo.addProduct(data);
-    const products = await productManagerMongo.getProducts();
-    socketServer.sockets.emit("products", products);
-  });
+//   socket.on("formSubmission", async (data) => {
+//     await productManagerMongo.addProduct(data);
+//     const products = await productManagerMongo.getProducts();
+//     socketServer.sockets.emit("products", products);
+//   });
 
-  socket.on("msg_front_to_back", async (msg) => {
-    const msgCreated = await MsgModel.create(msg);
-    const msgs = await MsgModel.find({});
-    socketServer.sockets.emit("all_msgs", msgs);
-  });
-});
+//   socket.on("msg_front_to_back", async (msg) => {
+//     const msgCreated = await MsgModel.create(msg);
+//     const msgs = await MsgModel.find({});
+//     socketServer.sockets.emit("all_msgs", msgs);
+//   });
+// });
 
 initializePassport();
 app.use(passport.initialize());
@@ -79,15 +78,7 @@ app.use("/api/products", productManagerRouter);
 
 app.use("/api/carts", cartsRouter);
 
-app.use("/api/sessions", loginRouter);
-
-app.use("/api/sessions/current", (req, res) => {
-  return res.status(200).json({
-    status: "success",
-    msg: "User data session",
-    payload: req.session.user || {},
-  });
-});
+app.use("/api/sessions", authRouter);
 
 app.get("*", (req, res) => {
   res.status(404).send({ status: "error", data: "Page not found" });
