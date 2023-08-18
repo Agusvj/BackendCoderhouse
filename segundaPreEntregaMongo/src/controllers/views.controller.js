@@ -2,7 +2,7 @@ import { productService } from "../services/index.js";
 import { cartService } from "../services/index.js";
 
 export class ViewsController {
-  async getProducts(req, res) {
+  async getProducts(req, res, next) {
     try {
       const allProducts = await productService.getProducts(req.query);
 
@@ -31,11 +31,11 @@ export class ViewsController {
         },
       });
     } catch (error) {
-      throw new Error(error);
+      next(error);
     }
   }
 
-  async getProductById(req, res) {
+  async getProductById(req, res, next) {
     try {
       let pId = req.params.pid;
       const product = await productService.getProductById(pId);
@@ -53,35 +53,43 @@ export class ViewsController {
         },
       });
     } catch (error) {
-      throw new Error(error);
+      next(error);
     }
   }
 
-  async getCartById(req, res) {
-    let cId = req.params.cid;
-    const cart = await cartService.getCartId(cId);
-    const totalPrice = cart.products.reduce(
-      (acc, product) => acc + product.quantity * product.product.price,
-      0
-    );
+  async getCartById(req, res, next) {
+    try {
+      let cId = req.params.cid;
+      const cart = await cartService.getCartId(cId);
+      const totalPrice = cart.products.reduce(
+        (acc, product) => acc + product.quantity * product.product.price,
+        0
+      );
 
-    res.status(200).render("cartDetail", {
-      style: "styles.css",
-      p: cart.products.map((product) => ({
-        name: product.product.name,
-        price: product.product.price,
-        quantity: product.quantity,
-      })),
-      totalPrice,
-    });
+      res.status(200).render("cartDetail", {
+        style: "styles.css",
+        p: cart.products.map((product) => ({
+          name: product.product.name,
+          price: product.product.price,
+          quantity: product.quantity,
+        })),
+        totalPrice,
+      });
+    } catch (error) {
+      next(error);
+    }
   }
 
-  async logout(req, res) {
-    req.session.destroy((err) => {
-      if (err) {
-        return res.json({ status: "Logout error", body: err });
-      }
-      res.redirect("/login");
-    });
+  async logout(req, res, next) {
+    try {
+      req.session.destroy((err) => {
+        if (err) {
+          return res.json({ status: "Logout error", body: err });
+        }
+        res.redirect("/login");
+      });
+    } catch (error) {
+      next(error);
+    }
   }
 }

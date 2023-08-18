@@ -15,7 +15,7 @@ viewsRouter.get("/", async (req, res) => {
   res.render("login");
 });
 
-viewsRouter.get("/products", viewsController.getProducts);
+viewsRouter.get("/products", checkUser, viewsController.getProducts);
 
 viewsRouter.get("/productDetail/:pid", viewsController.getProductById);
 

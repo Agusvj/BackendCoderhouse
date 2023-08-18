@@ -1,11 +1,11 @@
 import { userDto } from "../dao/dto/user.dto.js";
 
 export class AuthController {
-  async createSession(req, res) {
+  async createSession(req, res, next) {
     return res.send(JSON.stringify(req.session));
   }
 
-  async register(req, res) {
+  async register(req, res, next) {
     if (!req.user) {
       return res.json({ error: "something went wrong" });
     }
@@ -22,7 +22,7 @@ export class AuthController {
     return res.redirect("/products");
   }
 
-  async loginUser(req, res) {
+  async loginUser(req, res, next) {
     if (!req.user) {
       return res.json({ error: "invalid credentials" });
     }
@@ -37,7 +37,7 @@ export class AuthController {
     return res.redirect("/products");
   }
 
-  async logout(req, res) {
+  async logout(req, res, next) {
     req.session.destroy((err) => {
       if (err) {
         return res.status(500).json({ message: err.message });
@@ -46,7 +46,7 @@ export class AuthController {
     });
   }
 
-  async getCurrentUser(req, res) {
+  async getCurrentUser(req, res, next) {
     if (!req.session.user) {
       return res.json({ error: "invalid credentials" });
     }

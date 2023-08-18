@@ -1,3 +1,7 @@
+import CustomError from "./errors/CustomError.js";
+import { generateProductErrorInfo } from "./errors/info.js";
+import EErrors from "./errors/enums.js";
+
 export class ProductService {
   constructor(dao) {
     this.dao = dao;
@@ -12,7 +16,12 @@ export class ProductService {
       product[key] === null ||
       typeof product[key] !== "string"
     ) {
-      throw new Error(`Error: Field ${key} is invalid`);
+      CustomError.createError({
+        name: "Invalid field",
+        cause: generateProductErrorInfo(product),
+        message: `Error: Field ${key} is invalid`,
+        code: EErrors.INVALID_PARAM,
+      });
     } else {
       return true;
     }
@@ -26,34 +35,48 @@ export class ProductService {
       product[key] === null ||
       product[key] < 0
     ) {
-      throw new Error(`Error: Field ${key} is invalid`);
+      CustomError.createError({
+        name: "Invalid field",
+        cause: generateProductErrorInfo(product),
+        message: `Error: Field ${key} is invalid`,
+        code: EErrors.INVALID_PARAM,
+      });
     } else {
       return true;
     }
   }
 
   async addProduct(addedProduct) {
-    try {
-      const product = {
-        name: addedProduct.name,
-        description: addedProduct.description,
-        price: addedProduct.price,
-        stock: addedProduct.stock,
-        thumbnails: addedProduct.thumbnails,
-        status: true,
-        code: addedProduct.code,
-        category: addedProduct.category,
-      };
+    const product = {
+      name: addedProduct.name,
+      description: addedProduct.description,
+      price: addedProduct.price,
+      stock: addedProduct.stock,
+      thumbnails: addedProduct.thumbnails,
+      status: true,
+      code: addedProduct.code,
+      category: addedProduct.category,
+    };
 
+    try {
       const newProduct = await this.dao.addProduct(product);
 
       return newProduct;
     } catch (error) {
       if (error.code === 11000) {
-        console.log(error);
-        throw new Error('El campo "code" ya existe en la base de datos.');
+        CustomError.createError({
+          name: "Invalid field",
+          cause: generateProductErrorInfo(product),
+          message: `Error: Field code is repeated`,
+          code: EErrors.INVALID_PARAM,
+        });
       } else {
-        throw new Error(error);
+        CustomError.createError({
+          name: "Invalid field",
+          cause: generateProductErrorInfo(product),
+          message: `Error: product is invalid`,
+          code: EErrors.INVALID_PARAM,
+        });
       }
     }
   }
@@ -76,7 +99,12 @@ export class ProductService {
 
       return allProducts;
     } catch (error) {
-      throw new Error(error);
+      CustomError.createError({
+        name: "Database error",
+        cause: "Problemas en la base de datos, intente mas tarde",
+        message: `Error al traer los productos, ${error}`,
+        code: EErrors.DATABASE_ERROR,
+      });
     }
   }
 
@@ -86,7 +114,12 @@ export class ProductService {
 
       return foundProduct;
     } catch (error) {
-      throw new Error(error);
+      CustomError.createError({
+        name: "Database error",
+        cause: "Product not found",
+        message: `Error al traer el producto, ${id}`,
+        code: EErrors.NOT_FOUND,
+      });
     }
   }
 
@@ -120,7 +153,12 @@ export class ProductService {
             this.#validateNumberField(field, product);
           }
         } else {
-          throw new Error("Product field not valid");
+          CustomError.createError({
+            name: "Invalid field",
+            cause: generateProductErrorInfo(product),
+            message: `Error: products fields invalid`,
+            code: EErrors.INVALID_PARAM,
+          });
         }
       });
 
@@ -128,7 +166,12 @@ export class ProductService {
 
       return productToUpdate;
     } catch (error) {
-      throw new Error(error);
+      CustomError.createError({
+        name: "Invalid field",
+        cause: generateProductErrorInfo(product),
+        message: `Error: products fields invalid`,
+        code: EErrors.INVALID_PARAM,
+      });
     }
   }
 
@@ -137,7 +180,12 @@ export class ProductService {
       const deletedProduct = await this.dao.deleteProduct(id);
       return deletedProduct;
     } catch (error) {
-      throw new Error(error);
+      CustomError.createError({
+        name: "Database error",
+        cause: "Product not found",
+        message: `Error al borrar el producto, ${id}`,
+        code: EErrors.NOT_FOUND,
+      });
     }
   }
 }

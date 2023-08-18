@@ -2,26 +2,26 @@ import { cartService } from "../services/index.js";
 import { productService } from "../services/index.js";
 
 export class CartController {
-  async createCart(req, res) {
+  async createCart(req, res, next) {
     try {
       const userCart = await cartService.createCart();
       res.status(201).send({ status: "success", data: userCart });
     } catch (error) {
-      res.status(400).send({ status: "error", error: "Cart not created" });
+      next(error);
     }
   }
 
-  async getCartId(req, res) {
+  async getCartId(req, res, next) {
     try {
       let cid = req.params.cid;
       const cartId = await cartService.getCartId(cid);
       res.status(200).send({ status: "success", data: cartId });
     } catch (error) {
-      res.status(404).send({ status: "error", error: error.message });
+      next(error);
     }
   }
 
-  async addProductToCart(req, res) {
+  async addProductToCart(req, res, next) {
     try {
       let cid = req.params.cid;
       let pid = req.params.pid;
@@ -30,11 +30,11 @@ export class CartController {
         .status(200)
         .send({ status: "success", data: "product added: " + cartId });
     } catch (error) {
-      res.status(404).send({ status: "error", error: error.message });
+      next(error);
     }
   }
 
-  async deleteProductFromCart(req, res) {
+  async deleteProductFromCart(req, res, next) {
     try {
       let cid = req.params.cid;
       let pid = req.params.pid;
@@ -44,11 +44,11 @@ export class CartController {
         .status(200)
         .send({ status: "success", data: `Product ${pid} removed 1 quantity` });
     } catch (error) {
-      res.status(404).send({ status: "error", error: error.message });
+      next(error);
     }
   }
 
-  async deleteProductFromCartComplete(req, res) {
+  async deleteProductFromCartComplete(req, res, next) {
     try {
       let cid = req.params.cid;
       let pid = req.params.pid;
@@ -58,11 +58,11 @@ export class CartController {
         .status(200)
         .send({ status: "success", data: `Product ${pid} removed` });
     } catch (error) {
-      res.status(404).send({ status: "error", error: error.message });
+      next(error);
     }
   }
 
-  async updateQuantityProductFromCart(req, res) {
+  async updateQuantityProductFromCart(req, res, next) {
     try {
       let cid = req.params.cid;
       let pid = req.params.pid;
@@ -74,33 +74,33 @@ export class CartController {
       );
       res.status(200).send({ status: "success", data: cartId });
     } catch (error) {
-      res.status(404).send({ status: "error", error: error.message });
+      next(error);
     }
   }
 
-  async updateCartArray(req, res) {
+  async updateCartArray(req, res, next) {
     try {
       let cid = req.params.cid;
       let body = req.body;
       const cartId = await cartService.updateCartArray(cid, body);
       res.status(200).send({ status: "success", data: cartId });
     } catch (error) {
-      res.status(404).send({ status: "error", error: error.message });
+      next(error);
     }
   }
 
-  async deleteAllProductsFromCart(req, res) {
+  async deleteAllProductsFromCart(req, res, next) {
     try {
       const cartId = await cartService.deleteAllProductsFromCart(
         req.params.cid
       );
       res.status(200).send({ status: "success", data: cartId });
     } catch (error) {
-      res.status(404).send({ status: "error", error: error.message });
+      next(error);
     }
   }
 
-  async purchase(req, res) {
+  async purchase(req, res, next) {
     try {
       const result = await cartService.purchase(
         req.params.cid,
@@ -113,11 +113,7 @@ export class CartController {
         data: result,
       });
     } catch (error) {
-      return res.status(500).json({
-        status: "error",
-        msg: error.message,
-        data: {},
-      });
+      next(error);
     }
   }
 }

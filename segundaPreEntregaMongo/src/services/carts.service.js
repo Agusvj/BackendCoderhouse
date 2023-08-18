@@ -1,4 +1,6 @@
 import { productService, ticketService } from "./index.js";
+import CustomError from "./errors/CustomError.js";
+import EErrors from "./errors/enums.js";
 
 export class CartService {
   constructor(dao) {
@@ -10,7 +12,12 @@ export class CartService {
       const newCart = await this.dao.createCart();
       return newCart;
     } catch (error) {
-      throw new Error(error);
+      CustomError.createError({
+        name: "Cart creation failed",
+        cause: "You need to register and login",
+        message: `Error: not logged in`,
+        code: EErrors.AUTH_ERROR,
+      });
     }
   }
 
@@ -20,7 +27,12 @@ export class CartService {
 
       return cart;
     } catch (error) {
-      throw new Error("Cart not found");
+      CustomError.createError({
+        name: "Database error",
+        cause: "Cart not found",
+        message: `Error al traer el carrito, ${id}`,
+        code: EErrors.NOT_FOUND,
+      });
     }
   }
 
@@ -29,14 +41,24 @@ export class CartService {
       const productToAdd = await productService.getProductById(pId);
 
       if (!productToAdd) {
-        throw new Error("Product not found");
+        CustomError.createError({
+          name: "Database error",
+          cause: "Product not found",
+          message: `Error al traer el producto, ${pId}`,
+          code: EErrors.NOT_FOUND,
+        });
       }
 
       let cart = await this.dao.addProductToCart(cId, productToAdd);
 
       return cart;
     } catch (error) {
-      throw new Error(error);
+      CustomError.createError({
+        name: "Database error",
+        cause: "Cart not found",
+        message: `Error al traer el carrito, ${cId}`,
+        code: EErrors.NOT_FOUND,
+      });
     }
   }
 
@@ -45,14 +67,24 @@ export class CartService {
       const productToDelete = await productService.getProductById(pId);
 
       if (!productToDelete) {
-        throw new Error("Product not found");
+        CustomError.createError({
+          name: "Database error",
+          cause: "Product not found",
+          message: `Error al traer el producto, ${pId}`,
+          code: EErrors.NOT_FOUND,
+        });
       }
 
       let cart = await this.dao.deleteProductFromCart(cId, pId);
 
       return cart;
     } catch (error) {
-      throw new Error(error);
+      CustomError.createError({
+        name: "Database error",
+        cause: "Cart not found",
+        message: `Error al traer el carrito, ${cId}`,
+        code: EErrors.NOT_FOUND,
+      });
     }
   }
 
@@ -61,7 +93,12 @@ export class CartService {
       const productToDelete = await productService.getProductById(pId);
 
       if (!productToDelete) {
-        throw new Error("Product not found");
+        CustomError.createError({
+          name: "Database error",
+          cause: "Product not found",
+          message: `Error al traer el producto, ${pId}`,
+          code: EErrors.NOT_FOUND,
+        });
       }
 
       let cart = await this.dao.deleteProductFromCartComplete(
@@ -71,7 +108,12 @@ export class CartService {
 
       return cart;
     } catch (error) {
-      throw new Error(error);
+      CustomError.createError({
+        name: "Database error",
+        cause: "Cart not found",
+        message: `Error al traer el carrito, ${cId}`,
+        code: EErrors.NOT_FOUND,
+      });
     }
   }
 
@@ -80,7 +122,12 @@ export class CartService {
       const productToUpdate = await productService.getProductById(pId);
 
       if (!productToUpdate) {
-        throw new Error("Product not found");
+        CustomError.createError({
+          name: "Database error",
+          cause: "Product not found",
+          message: `Error al traer el producto, ${pId}`,
+          code: EErrors.NOT_FOUND,
+        });
       }
 
       if (
@@ -90,7 +137,12 @@ export class CartService {
         quantity.quantity === undefined ||
         typeof quantity.quantity === "string"
       ) {
-        throw new Error("Quantity must be a positive number");
+        CustomError.createError({
+          name: "Cart error",
+          cause: `Cart quantity error, ${quantity.quantity}`,
+          message: `Quantity must be a positive number`,
+          code: EErrors.CART_ERROR,
+        });
       }
 
       let cart = await this.dao.updateQuantityProductFromCart(
@@ -101,7 +153,12 @@ export class CartService {
 
       return cart + ` QUANTITY updated to ${quantity.quantity}`;
     } catch (error) {
-      throw new Error(error);
+      CustomError.createError({
+        name: "Database error",
+        cause: "Cart not found",
+        message: `Error al traer el carrito, ${cId}`,
+        code: EErrors.NOT_FOUND,
+      });
     }
   }
 
@@ -129,7 +186,12 @@ export class CartService {
       let cart = await this.dao.findByIdAndUpdate(cId, newCartProducts);
       return cart;
     } catch (error) {
-      throw new Error(error);
+      CustomError.createError({
+        name: "Database error",
+        cause: "Cart not found",
+        message: `Error al traer el carrito, ${cId}`,
+        code: EErrors.NOT_FOUND,
+      });
     }
   }
 
@@ -138,7 +200,12 @@ export class CartService {
       await this.dao.findByIdAndUpdate(cId, { products: [] });
       return "Cart empty";
     } catch (error) {
-      throw new Error("Cart not found");
+      CustomError.createError({
+        name: "Cart error",
+        cause: "Cart not found",
+        message: `Error al traer el carrito, ${cId}`,
+        code: EErrors.NOT_FOUND,
+      });
     }
   }
 
@@ -147,7 +214,12 @@ export class CartService {
       const cart = await this.dao.getCartId(cid);
 
       if (cart.products.length === 0) {
-        throw new Error("Cart is empty");
+        CustomError.createError({
+          name: "Cart error",
+          cause: `Cart products error, ${cart.products.length}`,
+          message: `Product quantity must be positive and not null`,
+          code: EErrors.CART_ERROR,
+        });
       }
 
       const purchasedProducts = [];
@@ -177,7 +249,12 @@ export class CartService {
           purchaser: user.email,
         });
       } else {
-        throw new Error("Cart is empty");
+        CustomError.createError({
+          name: "Cart error",
+          cause: `Cart products error, ${cart.products.length}`,
+          message: `Product quantity must be positive and not null`,
+          code: EErrors.CART_ERROR,
+        });
       }
 
       if (notPurchasedProducts.length > 0) {

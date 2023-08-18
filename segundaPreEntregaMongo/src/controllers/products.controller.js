@@ -1,7 +1,7 @@
 import { productService } from "../services/index.js";
 
 export class ProductController {
-  async getProducts(req, res) {
+  async getProducts(req, res, next) {
     try {
       const allProducts = await productService.getProducts(req.query);
 
@@ -26,21 +26,21 @@ export class ProductController {
         // ...allProducts,
       });
     } catch (error) {
-      res.status(400).send({ status: "error", error: error.message });
+      next(error);
     }
   }
 
-  async getProductById(req, res) {
+  async getProductById(req, res, next) {
     try {
       let pid = req.params.pid;
       const findProduct = await productService.getProductById(pid);
       res.status(200).send({ status: "success", data: findProduct });
     } catch (error) {
-      res.status(400).send({ status: "error", data: error.message });
+      next(error);
     }
   }
 
-  async updateProduct(req, res) {
+  async updateProduct(req, res, next) {
     let updateProductClient = req.body;
     let pid = req.params.pid;
     try {
@@ -50,24 +50,22 @@ export class ProductController {
       );
       res.status(200).send({ status: "success", data: updateProduct });
     } catch (error) {
-      res.status(400).send({ status: "error", data: error.message });
+      next(error);
     }
   }
 
-  async addProduct(req, res) {
+  async addProduct(req, res, next) {
     let newProduct = req.body;
     try {
       const addProduct = await productService.addProduct(newProduct);
       res.status(201).send({ status: "success", data: addProduct });
     } catch (error) {
-      res.status(400).send({
-        status: "error",
-        data: error.message,
-      });
+      console.log(error);
+      next(error);
     }
   }
 
-  async deleteProduct(req, res) {
+  async deleteProduct(req, res, next) {
     let pid = req.params.pid;
     console.log(pid);
 
@@ -78,7 +76,7 @@ export class ProductController {
         data: "El producto eliminado es:" + deleteProduct,
       });
     } catch (error) {
-      res.status(400).send({ status: "error", data: error.message });
+      next(error);
     }
   }
 }
