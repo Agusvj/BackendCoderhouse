@@ -1,58 +1,47 @@
 import EErrors from "../services/errors/enums.js";
 
 export default (error, req, res, next) => {
+  let logMessage = "Error"; // Default log message
+
   switch (error.code) {
     case EErrors.INVALID_PARAM:
-      res.status(400).send({
-        status: "error",
-        error: error.name,
-        cause: error.cause,
-        info: error.message,
-        code: error.code,
-      });
+      logMessage = "error";
+      res.status(400);
       break;
 
     case EErrors.DATABASE_ERROR:
-      res.status(500).send({
-        status: "error",
-        error: error.name,
-        cause: error.cause,
-        info: error.message,
-        code: error.code,
-      });
+      logMessage = "fatal";
+      res.status(500);
       break;
 
     case EErrors.NOT_FOUND:
-      res.status(404).send({
-        status: "error",
-        error: error.name,
-        cause: error.cause,
-        info: error.message,
-        code: error.code,
-      });
+      logMessage = "error";
+      res.status(404);
       break;
 
     case EErrors.AUTH_ERROR:
-      res.status(401).send({
-        status: "error",
-        error: error.name,
-        cause: error.cause,
-        info: error.message,
-        code: error.code,
-      });
+      res.status(401);
       break;
 
     case EErrors.CART_ERROR:
-      res.status(400).send({
-        status: "error",
-        error: error.name,
-        cause: error.cause,
-        info: error.message,
-        code: error.code,
-      });
+      logMessage = "warning";
+      res.status(400);
       break;
 
     default:
-      res.send({ status: "error", error: "Unhandled error" });
+      console.error(error); // Log the error for debugging purposes
+      res.status(500);
   }
+
+  // Log the message without involving the response object
+  req.logger.log(logMessage, { error: error.name, cause: error.cause });
+
+  // Build the response object
+  res.send({
+    status: "error",
+    error: error.name,
+    cause: error.cause,
+    info: error.message,
+    code: error.code,
+  });
 };

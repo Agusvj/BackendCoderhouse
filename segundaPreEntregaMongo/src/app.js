@@ -15,6 +15,7 @@ import MongoStore from "connect-mongo";
 import { initializePassport } from "./config/passport.config.js";
 import passport from "passport";
 import errorHandler from "./middlewares/error.js";
+import { addLogger } from "./middlewares/logger.js";
 
 const app = express();
 app.use(cookieParser());
@@ -50,6 +51,7 @@ app.set("view engine", "handlebars");
 app.use(express.static(__dirname + "/public"));
 
 app.use("/", viewsRouter);
+app.use(addLogger);
 
 // socketServer.on("connection", async (socket) => {
 //   console.log("Nuevo cliente conectado");
@@ -102,6 +104,16 @@ app.get("/mockingproducts", (req, res) => {
     msg: "Products created",
     docs: products,
   });
+});
+
+app.get("/loggerTest", (req, res) => {
+  req.logger.debug("debug alert!!");
+  req.logger.http("http alert!!");
+  req.logger.info("info alert!!");
+  req.logger.warning("warning alert!!!");
+  req.logger.error("error alert!!!");
+  req.logger.fatal("fatal error!!");
+  res.send({ message: "test logger" });
 });
 
 app.get("*", (req, res) => {

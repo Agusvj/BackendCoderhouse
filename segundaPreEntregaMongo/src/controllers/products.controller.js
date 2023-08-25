@@ -60,14 +60,12 @@ export class ProductController {
       const addProduct = await productService.addProduct(newProduct);
       res.status(201).send({ status: "success", data: addProduct });
     } catch (error) {
-      console.log(error);
       next(error);
     }
   }
 
   async deleteProduct(req, res, next) {
     let pid = req.params.pid;
-    console.log(pid);
 
     try {
       const deleteProduct = await ProductService.deleteProduct(pid);

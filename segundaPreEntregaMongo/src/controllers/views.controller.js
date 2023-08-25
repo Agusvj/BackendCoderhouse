@@ -40,8 +40,6 @@ export class ViewsController {
       let pId = req.params.pid;
       const product = await productService.getProductById(pId);
 
-      console.log(product);
-
       res.status(200).render("productDetail", {
         style: "../css/styles.css",
         p: {
