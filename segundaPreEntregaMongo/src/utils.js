@@ -5,6 +5,10 @@ const __dirname = dirname(__filename);
 import { connect } from "mongoose";
 import bcrypt from "bcrypt";
 import winston from "winston";
+import nodemailer from "nodemailer";
+import config from "../../config.js";
+
+console.log(config);
 
 export default __dirname;
 
@@ -61,4 +65,13 @@ export const logger = winston.createLogger({
       format: winston.format.simple(),
     }),
   ],
+});
+
+export const sendEmailTransport = nodemailer.createTransport({
+  service: "gmail",
+  port: 587,
+  auth: {
+    user: process.env.GOOGLE_EMAIL,
+    pass: process.env.GOOGLE_PASS,
+  },
 });
