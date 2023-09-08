@@ -14,7 +14,6 @@ export function initializePassport() {
       { usernameField: "email" },
       async (username, password, done) => {
         try {
-          console.log(username, password);
           const user = await userModel.findOne({ email: username });
 
           if (!user) {
@@ -73,9 +72,7 @@ export function initializePassport() {
         callbackURL: "http://localhost:8080/api/sessions/githubcallback",
       },
       async (accesToken, _, profile, done) => {
-        console.log(profile);
         try {
-          console.log(profile);
           const res = await fetch("https://api.github.com/user/emails", {
             headers: {
               Accept: "application/vnd.github+json",
@@ -102,15 +99,12 @@ export function initializePassport() {
               cart: cart._id,
             };
             let userCreated = await userModel.create(newUser);
-            console.log("User Registration succesful");
+
             return done(null, userCreated);
           } else {
-            console.log("User already exists");
             return done(null, user);
           }
         } catch (e) {
-          console.log("Error en auth github");
-          console.log(e);
           return done(e);
         }
       }

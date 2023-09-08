@@ -29,7 +29,6 @@ form.addEventListener("submit", (e) => {
 });
 
 socket.on("products", (products) => {
-  console.log(products);
   let divAllProducts = document.getElementById("allProducts");
   divAllProducts.innerHTML = "";
 

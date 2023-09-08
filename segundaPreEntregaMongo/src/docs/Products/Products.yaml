@@ -1,0 +1,139 @@
+paths:
+  /api/products:
+    get:
+      summary: Obtiene todos los productos
+      tags:
+        - Products
+      responses:
+        "200":
+          description: "Productos encontrados"
+        "404":
+          description: "Productos no encontrados"
+    post:
+      summary: Agrega un nuevo producto
+      tags:
+        - Products
+      security:
+        - adminAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Product"
+      responses:
+        "201":
+          description: "Producto agregado exitosamente"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Product"
+        "401":
+          description: "No autorizado"
+
+  /api/products/{pid}:
+    get:
+      summary: Obtiene un producto por su ID autogenerado por mongo
+      tags:
+        - Products
+      parameters:
+        - name: pid
+          in: path
+          description: ID del producto que se desea obtener
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: "Producto encontrado"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Product"
+        "404":
+          description: "Producto no encontrado"
+
+    put:
+      summary: Actualiza un producto por su ID, debe estar logeado como "admin"
+      tags:
+        - Products
+      parameters:
+        - name: pid
+          in: path
+          description: ID del producto que se desea actualizar
+          required: true
+          schema:
+            type: string
+        - name: body
+          in: body
+          description: Datos del producto a actualizar
+          required: true
+          schema:
+            $ref: "#/components/schemas/Product"
+      security:
+        - adminAuth: []
+      responses:
+        "200":
+          description: "Producto actualizado exitosamente"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Product"
+        "404":
+          description: "Producto no encontrado"
+
+components:
+  schemas:
+    Product:
+      type: object
+      properties:
+        name:
+          type: string
+          maxLength: 100
+        description:
+          type: string
+          maxLength: 100
+        price:
+          type: number
+        stock:
+          type: number
+        thumbnails:
+          type: array
+          items:
+            type: string
+        status:
+          type: boolean
+        code:
+          type: string
+          maxLength: 100
+          unique: true
+        category:
+          type: string
+          maxLength: 100
+      required:
+        - name
+        - description
+        - price
+        - stock
+        - thumbnails
+        - status
+        - code
+        - category
+
+      example:
+        name: "Ejemplo de Producto"
+        description: "Este es un producto de ejemplo"
+        price: 19.99
+        stock: 100
+        thumbnails:
+          - "imagen1.jpg"
+          - "imagen2.jpg"
+        status: true
+        code: "PROD123"
+        category: "Ejemplo"
+
+securitySchemes:
+  adminAuth:
+    type: apiKey
+    name: Authorization
+    in: header

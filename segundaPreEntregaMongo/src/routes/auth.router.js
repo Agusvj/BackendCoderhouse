@@ -60,7 +60,7 @@ authRouter.get(
       lastName: req.user.lastName,
       rol: req.user.rol,
     };
-    console.log("llegue aca");
+
     res.redirect("/products");
   }
 );

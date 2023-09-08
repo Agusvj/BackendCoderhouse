@@ -21,6 +21,8 @@ import crypto from "crypto";
 import { RecoverCodesSchema } from "./dao/models/recover-codes.js";
 import { userModel } from "./dao/models/users.model.js";
 import bcrypt from "bcrypt";
+import swaggerJsdoc from "swagger-jsdoc";
+import swaggerUiExpress from "swagger-ui-express";
 
 const app = express();
 app.use(cookieParser());
@@ -41,6 +43,20 @@ const port = 8080;
 connectMongo();
 
 app.use(express.urlencoded({ extended: true }));
+
+const swaggerOptions = {
+  definition: {
+    openapi: "3.0.1",
+    info: {
+      title: "Ecommerce CoderHouse Backend",
+      description: "Practica de backend de Ecommerce",
+    },
+  },
+  apis: [`${__dirname}/docs/**/*.yaml`],
+};
+
+const specs = swaggerJsdoc(swaggerOptions);
+app.use("/apidocs", swaggerUiExpress.serve, swaggerUiExpress.setup(specs));
 
 // const productManagerMongo = new ProductManagerMongo();
 

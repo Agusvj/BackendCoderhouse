@@ -8,8 +8,6 @@ import winston from "winston";
 import nodemailer from "nodemailer";
 import config from "../../config.js";
 
-console.log(config);
-
 export default __dirname;
 
 export async function connectMongo() {
