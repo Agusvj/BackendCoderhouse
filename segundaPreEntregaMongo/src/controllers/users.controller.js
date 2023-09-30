@@ -62,4 +62,14 @@ export class UserController {
       next(error);
     }
   }
+
+  async toggleUserRole(req, res, next) {
+    try {
+      let { uid } = req.params;
+      let result = await userService.toggleUserRole(uid);
+      res.send({ status: "success", payload: result });
+    } catch (error) {
+      next(error);
+    }
+  }
 }

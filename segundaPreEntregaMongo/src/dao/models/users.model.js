@@ -16,6 +16,8 @@ const userSchema = new mongoose.Schema({
     max: 100,
   },
   rol: { type: String, default: "user", required: true },
+  documents: { type: Array, required: false, default: [] },
+  last_connection: { type: Date, default: Date.now },
 });
 
 export const userModel = mongoose.model(userCollection, userSchema);

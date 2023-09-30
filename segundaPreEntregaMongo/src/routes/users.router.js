@@ -1,6 +1,7 @@
 import { Router } from "express";
 
-import { UserController } from "../controllers/users.controller";
+import { UserController } from "../controllers/users.controller.js";
+import { checkAdmin } from "../middlewares/auth.js";
 
 const userController = new UserController();
 
@@ -16,3 +17,5 @@ usersRouter.post("/", userController.createUser);
 usersRouter.put("/:uid", userController.updateUser);
 
 usersRouter.delete("/:uid", userController.deleteUser);
+
+usersRouter.put("/premium/:uid", checkAdmin, userController.toggleUserRole);
