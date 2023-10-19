@@ -68,7 +68,7 @@ export class ProductController {
     let pid = req.params.pid;
 
     try {
-      const deleteProduct = await ProductService.deleteProduct(pid);
+      const deleteProduct = await productService.deleteProduct(pid);
       res.status(200).send({
         status: "success",
         data: "El producto eliminado es:" + deleteProduct,

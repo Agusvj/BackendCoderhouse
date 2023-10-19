@@ -1,0 +1,17 @@
+<div>
+  {{#each u}}
+    <p>Nombre: {{this.firstName}}</p>
+    <p>Apellido: {{this.lastName}}</p>
+    <p>Rol: {{this.rol}}</p>
+
+    <button onclick="deleteUser('{{this.id}}')">Delete</button>
+    <button onclick="toggleUserRol('{{this.id}}')">Change Rol</button>
+  {{/each}}
+</div>
+
+<!-- prettier-ignore -->
+<script>
+  async function deleteUser(uId) { await fetch(`/api/users/${uId}`, { method:
+  "DELETE" }); location.reload(); }; async function toggleUserRol(uId) { await
+  fetch(`/api/users/premium/${uId}`, { method: "PUT" }); location.reload(); };
+</script>

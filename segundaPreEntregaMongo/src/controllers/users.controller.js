@@ -1,9 +1,11 @@
 import { userService } from "../services/index.js";
+import { userDto } from "../dao/dto/user.dto.js";
 
 export class UserController {
   async getAllUsers(req, res, next) {
     try {
-      const users = await userService.getAllUsers();
+      let users = await userService.getAllUsers();
+      users = users.map((user) => userDto(user));
       res.send({ result: "success", payload: users });
     } catch (error) {
       next(error);
@@ -58,6 +60,20 @@ export class UserController {
       let { uid } = req.params;
       let result = await userService.deleteUser(uid);
       res.send({ status: "success", payload: result });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async deleteInactiveUsers(req, res, next) {
+    try {
+      const users = await userService.deleteInactiveUsers();
+
+      return res.status(201).json({
+        status: "success",
+        msg: "Inactive users deleted successfully",
+        payload: users,
+      });
     } catch (error) {
       next(error);
     }

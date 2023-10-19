@@ -22,4 +22,13 @@
 
   <a href="http://localhost:8080/products">Back to Products</a>
 
+  <button onclick="purchase('{{cart}}')">Terminar Compra</button>
+
 </div>
+
+<script>
+  async function purchase(cId){ const res = await
+  fetch(`/api/carts/${cId}/purchase`, {method:"POST"}); const data = await
+  res.json(); location.href = "/purchase-success?ticket="+data.data.ticket.code;
+  }
+</script>

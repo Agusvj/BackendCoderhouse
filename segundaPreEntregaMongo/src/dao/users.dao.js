@@ -21,8 +21,25 @@ export class UsersDao {
     return updatedUser;
   }
 
+  async getOne(id) {
+    const user = await userModel.findById(id);
+    return user;
+  }
+
   async deleteUser(id) {
     let deletedUser = await userModel.findByIdAndDelete({ _id: id });
     return deletedUser;
+  }
+
+  async deleteInactiveUsers() {
+    const today = new Date();
+    const daysOfInactivity = 2;
+    const twoDaysBefore = today.setDate(today.getDate() - daysOfInactivity);
+
+    const deletedUsers = await userModel.deleteMany({
+      last_connection: { $lte: twoDaysBefore },
+    });
+
+    return deletedUsers;
   }
 }

@@ -2,6 +2,7 @@
   <h1>Welcome {{session.sessionDataName}}, eres un {{session.sessionAuth}}!</h1>
 
   <a href="/logout" class="logOut">LogOut</a>
+  <a href="/carts/{{session.sessionCart}}" class="logOut">Cart</a>
 
   <div class="shop">
 
@@ -14,9 +15,11 @@
 
         <p>Price: {{this.price}}</p>
 
-        <button>Add To pouch</button>
+        <button
+          onclick="addProductToCart('{{this._id}}','{{this.sessionCart}}')"
+        >Add To pouch</button>
 
-        <a href="http://localhost:8080/productDetail/{{this._id}}">More Details</a>
+        <a href="/productDetail/{{this._id}}">More Details</a>
 
       </div>
     {{/each}}
@@ -31,13 +34,19 @@
 
     {{prevPage}}
     {{#if hasPrevPage}}
-      <a href="http://localhost:8080/products/?page={{prevPage}}">⬅️</a>
+      <a href="/products/?page={{prevPage}}">⬅️</a>
     {{/if}}
     {{page}}
     {{#if hasNextPage}}
-      <a href="http://localhost:8080/products/?page={{nextPage}}">➡️</a>
+      <a href="/products/?page={{nextPage}}">➡️</a>
     {{/if}}
     {{nextPage}}
   </div>
 
 </div>
+
+<script>
+  async function addProductToCart(pId, cId){ await
+  fetch(`/api/carts/${cId}/product/${pId}`, {method:"POST"}); location.reload()
+  }
+</script>

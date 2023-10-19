@@ -3,7 +3,7 @@ export class UserService {
     this.dao = dao;
   }
 
-  async getAllusers() {
+  async getAllUsers() {
     const users = await this.dao.getAllUsers();
     return users;
   }
@@ -23,48 +23,37 @@ export class UserService {
     return deletedUser;
   }
 
+  async deleteInactiveUsers() {
+    try {
+      const deletedUsers = await this.dao.deleteInactiveUsers();
+
+      return deletedUsers;
+    } catch (error) {
+      throw new Error(error);
+    }
+  }
+
   async toggleUserRole(id) {
     try {
       const user = await this.dao.getOne(id);
 
       if (!user) {
-        throw new NotFoundError("User not found");
+        throw new Error("User not found");
       }
 
-      if (user.role === "premium") {
-        user.role = "user";
-      } else if (user.role === "user") {
-        const neededDocuments = [
-          "identification",
-          "residence",
-          "account_state",
-        ];
-
-        const userDocuments = user.documents.map(
-          (document) => document.name.split(".")[0]
-        );
-
-        let equals = false;
-        if (userDocuments.length > 0) {
-          equals = neededDocuments.every((document) =>
-            userDocuments.includes(document)
-          );
-        }
-
-        if (!equals) {
-          throw new BadRequestError("User doesn't have necessary files");
-        }
-
-        user.role = "premium";
+      if (user.rol === "premium") {
+        user.rol = "user";
+      } else if (user.rol === "user") {
+        user.rol = "premium";
       } else {
-        throw new BadRequestError("Can't change admin role");
+        throw new Error("Can't change admin role");
       }
 
       await user.save();
 
       return user;
     } catch (error) {
-      throw new ServerError(error);
+      throw new Error(error);
     }
   }
 }

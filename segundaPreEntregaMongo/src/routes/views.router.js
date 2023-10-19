@@ -42,3 +42,7 @@ viewsRouter.get("/register", async (req, res) => {
 viewsRouter.get("/profile", checkUser, async (req, res) => {
   res.render("profile");
 });
+
+viewsRouter.get("/users", checkAdmin, viewsController.getUsers);
+
+viewsRouter.get("/purchase-success", viewsController.purchaseSuccess);

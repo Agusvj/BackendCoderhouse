@@ -258,15 +258,15 @@ export class CartService {
       }
 
       if (notPurchasedProducts.length > 0) {
-        await this.dao.updateCartProducts(
+        await this.dao.findByIdAndUpdate(
           cid,
           notPurchasedProducts.map((item) => ({
-            id: item.product._id.toString(),
+            product: item.product._id.toString(),
             quantity: item.quantity,
           }))
         );
       } else {
-        await this.dao.findByIdAndUpdate(cid);
+        await this.dao.findByIdAndUpdate(cid, []);
       }
 
       return {

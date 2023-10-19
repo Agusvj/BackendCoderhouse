@@ -6,7 +6,7 @@
   "scripts": {
     "test": "mocha",
     "start": "node segundaPreEntregaMongo/src/app.js",
-    "dev": "nodemon -e yaml segundaPreEntregaMongo/src/app.js"
+    "dev": "nodemon  segundaPreEntregaMongo/src/app.js"
   },
   "author": "",
   "license": "ISC",

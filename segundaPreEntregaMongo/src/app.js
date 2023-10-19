@@ -23,14 +23,15 @@ import { userModel } from "./dao/models/users.model.js";
 import bcrypt from "bcrypt";
 import swaggerJsdoc from "swagger-jsdoc";
 import swaggerUiExpress from "swagger-ui-express";
+import { usersRouter } from "./routes/users.router.js";
+import env from "../../config.js";
 
 const app = express();
 app.use(cookieParser());
 app.use(
   session({
     store: MongoStore.create({
-      mongoUrl:
-        "mongodb+srv://agusvj:7C2af80b2e53asd@cluster0.gjhmyvj.mongodb.net/ecommerce?retryWrites=true&w=majority",
+      mongoUrl: env.mongoUrl,
       mongoOptions: { useNewUrlParser: true, useUnifiedTopology: true },
     }),
     secret: "secretCoder",
@@ -153,6 +154,8 @@ app.use("/api/products", productManagerRouter);
 app.use("/api/carts", cartsRouter);
 
 app.use("/api/sessions", authRouter);
+
+app.use("/api/users", usersRouter);
 
 app.get("/mockingproducts", (req, res) => {
   const products = [];

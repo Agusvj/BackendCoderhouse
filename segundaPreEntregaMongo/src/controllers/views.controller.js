@@ -1,4 +1,4 @@
-import { productService } from "../services/index.js";
+import { productService, userService } from "../services/index.js";
 import { cartService } from "../services/index.js";
 
 export class ViewsController {
@@ -17,6 +17,7 @@ export class ViewsController {
           description: product.description,
           price: product.price,
           _id: product._id,
+          sessionCart: req.session.user.cart,
         })),
         pagingCounter: allProducts.pagingCounter,
         page: allProducts.page,
@@ -28,7 +29,25 @@ export class ViewsController {
         session: {
           sessionAuth: sessionAuth,
           sessionDataName: sessionDataName,
+          sessionCart: req.session.user.cart,
         },
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async getUsers(req, res, next) {
+    try {
+      const allUsers = await userService.getAllUsers();
+
+      res.status(200).render("users", {
+        u: allUsers.map((user) => ({
+          firstName: user.firstName,
+          lastName: user.lastName,
+          rol: user.rol,
+          id: user._id,
+        })),
       });
     } catch (error) {
       next(error);
@@ -65,13 +84,14 @@ export class ViewsController {
       );
 
       res.status(200).render("cartDetail", {
-        style: "styles.css",
+        style: "../css/styles.css",
         p: cart.products.map((product) => ({
           name: product.product.name,
           price: product.product.price,
           quantity: product.quantity,
         })),
         totalPrice,
+        cart: req.session.user.cart,
       });
     } catch (error) {
       next(error);
@@ -86,6 +106,16 @@ export class ViewsController {
         }
         res.redirect("/login");
       });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async purchaseSuccess(req, res, next) {
+    try {
+      const ticket = req.query.ticket;
+
+      return res.render("purchaseSuccess", { ticket });
     } catch (error) {
       next(error);
     }

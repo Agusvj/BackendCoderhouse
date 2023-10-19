@@ -7,12 +7,11 @@ const userController = new UserController();
 
 export const usersRouter = Router();
 
-usersRouter.use(express.json());
-usersRouter.use(express.urlencoded({ extended: true }));
-
 usersRouter.get("/", userController.getAllUsers);
 
 usersRouter.post("/", userController.createUser);
+
+usersRouter.delete("/", userController.deleteInactiveUsers);
 
 usersRouter.put("/:uid", userController.updateUser);
 
