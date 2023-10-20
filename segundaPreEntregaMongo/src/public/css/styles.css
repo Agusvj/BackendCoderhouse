@@ -9,8 +9,9 @@ body {
     align-items: center;
     flex-direction: column;
     justify-content: center;
-    background-image: url(https://res.cloudinary.com/dyshyq2vl/image/upload/v1687028287/wiebke-scholz-sts-between-worlds-bg01_kzhv7k.jpg);
-    background-size: cover;
+    background-color: rgb(25, 25, 25);
+    color: rgb(245, 245, 245);
+    font-family: monospace;
 }
 
 .main {
@@ -24,31 +25,20 @@ h1 {
     text-align: center;
     color: white;
     max-width: 280px;
-    background-color: rgba(0, 0, 0, 0.41);
     margin-top: 50px;
     margin-bottom: 50px;
-    box-shadow: -8px 10px 12px -6px rgba(255, 255, 255, 0.856);
-    border-radius: 10px;
-    border: 1px solid rgba(255, 255, 255, 0.597);
+    border-radius: 15px;
+    border: 2px solid white;
 }
 
 .containers {
-    background-image: url(https://res.cloudinary.com/dyshyq2vl/image/upload/v1687028449/pxfuel_i5rjsp.jpg);
-    background-size: cover;
     padding: 50px;
-    border-radius: 5px;
-    opacity: 0.5;
-}
-
-.containers:hover {
-    opacity: 1;
-    transition: all 0.5s ease;
-    border: 0.2px solid white;
+    border-radius: 10px;
+    border: 2px white solid;
 }
 
 .containers p {
-    color: black;
-    text-shadow: 3px 3px 3px white;
+    color: white;
     font-size: 1.3rem;
     font-family: Helvetica, sans-serif;
     font-weight: bold;
@@ -68,29 +58,141 @@ a {
     margin-right: 15px;
 }
 
+.add-button {
+    background-color: goldenrod;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 10px;
+    font-weight: bold;
+}
+
+.add-button:hover {
+    transition: ease 1s;
+    transform: scale(1.1);
+    font-weight: bolder;
+}
+
 .botonera {
     padding: 40px;
     color: white;
     font-size: 1.3rem;
-    background-color: rgba(0, 0, 0, 0.41);
     margin-top: 50px;
     margin-bottom: 50px;
-    box-shadow: -8px 10px 12px -6px rgba(255, 255, 255, 0.856);
     border-radius: 10px;
-    border: 1px solid rgba(255, 255, 255, 0.597);
+    border: 2px solid white;
 }
 
 .logOut {
     border-radius: 10px;
-    background-color: burlywood;
+    background-color: goldenrod;
     padding: 15px 25px;
     margin-bottom: 15px;
     text-decoration: none;
     color: black;
+    font-weight: bolder;
+    font-size: larger;
 }
 
 .logOut:hover {
     transform: scale(1.05);
     transition: all 0.5s ease-in-out;
     font-weight: bold;
+}
+
+label {
+    font-weight: bold;
+    font-size: x-large;
+}
+
+.register-form {
+    margin-top: 25px;
+    width: 100%;
+    max-width: 400px;
+    gap: 15px;
+    padding: 25px;
+    border: solid white 2px;
+    border-radius: 15px;
+}
+
+.register-form input {
+    width: 100%;
+    border-radius: 10px;
+    padding: 5px;
+}
+
+.register-form button {
+    padding: 10px 15px;
+    background-color: goldenrod;
+    border: none;
+    border-radius: 10px;
+    font-weight: bold;
+}
+
+.register-form button:hover {
+    cursor: pointer;
+    transform: scale(1.1);
+    transition: ease 0.5s;
+    font-weight: bolder;
+}
+
+.separator {
+    margin: 25px 0px;
+    width: 100%;
+}
+
+.ahac {
+    text-decoration: underline;
+    color: white;
+    margin: 15px;
+}
+
+.ahac:hover {
+    color: grey;
+    transition: ease 0.2s;
+}
+
+.login-form {
+    width: 100%;
+    max-width: 400px;
+    gap: 15px;
+    padding: 25px;
+    border: solid white 2px;
+    border-radius: 15px;
+    margin-top: 25px;
+}
+
+.login-form button:hover {
+    cursor: pointer;
+    transform: scale(1.1);
+    transition: ease 0.5s;
+    font-weight: bolder;
+}
+
+.login-form button {
+    padding: 10px 15px;
+    background-color: goldenrod;
+    border: none;
+    border-radius: 10px;
+    font-weight: bold;
+}
+
+.login-form input {
+    width: 100%;
+    border-radius: 10px;
+    padding: 5px;
+}
+
+.git-button {
+    padding: 10px 20px;
+    border-radius: 15px;
+    border: solid 2px white;
+    background-color: goldenrod;
+    font-weight: bold;
+}
+
+.git-button:hover {
+    cursor: pointer;
+    transform: scale(1.1);
+    transition: ease 0.5s;
+    font-weight: bolder;
 }

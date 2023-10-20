@@ -15,19 +15,21 @@
 
         <p>Price: {{this.price}}</p>
 
+        <hr class="separator" />
+
         <button
           onclick="addProductToCart('{{this._id}}','{{this.sessionCart}}')"
+          class="add-button"
         >Add To pouch</button>
 
-        <a href="/productDetail/{{this._id}}">More Details</a>
+        <a href="/productDetail/{{this._id}}" class="ahac">More Details</a>
 
       </div>
     {{/each}}
   </div>
 
   <div class="botonera">
-    {{this.pagingCounter}}
-    {{totalPages}}
+    Total pages:{{totalPages}}
 
     <hr />
     <hr />

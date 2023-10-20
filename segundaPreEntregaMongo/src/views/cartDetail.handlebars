@@ -1,28 +1,30 @@
 <div class="main">
 
-  <h1>Tu carrito</h1>
+  <h1 style="padding:15px">Tu carrito</h1>
 
   <hr />
   <hr />
+  <div class="containers">
 
-  {{#each p}}
+    {{#each p}}
 
-    <p>Nombre producto {{this.name}}</p>
+      <p>Nombre producto {{this.name}}</p>
 
-    <p>Precio unitario: $${{this.price}}</p>
+      <p>Precio unitario: $${{this.price}}</p>
 
-    <p>Cantidad: x{{this.quantity}}</p>
+      <p>Cantidad: x{{this.quantity}}</p>
 
-    <hr />
-    <hr />
+      <hr />
+      <hr />
 
-  {{/each}}
+    {{/each}}
 
-  <p>Precio total: $${{totalPrice}}</p>
+    <p>Precio total: $${{totalPrice}}</p>
 
-  <a href="http://localhost:8080/products">Back to Products</a>
+    <a href="http://localhost:8080/products" class="ahac">Back to Products</a>
 
-  <button onclick="purchase('{{cart}}')">Terminar Compra</button>
+    <button onclick="purchase('{{cart}}')" class="git-button">Terminar Compra</button>
+  </div>
 
 </div>
 

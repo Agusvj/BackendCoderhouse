@@ -115,7 +115,10 @@ export class ViewsController {
     try {
       const ticket = req.query.ticket;
 
-      return res.render("purchaseSuccess", { ticket });
+      return res.render("purchaseSuccess", {
+        ticket,
+        style: "../css/styles.css",
+      });
     } catch (error) {
       next(error);
     }
