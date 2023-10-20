@@ -6,7 +6,7 @@ import { connect } from "mongoose";
 import bcrypt from "bcrypt";
 import winston from "winston";
 import nodemailer from "nodemailer";
-import config from "../../config.js";
+import config from "../config.js";
 
 export default __dirname;
 

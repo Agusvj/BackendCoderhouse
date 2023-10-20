@@ -24,7 +24,7 @@ import bcrypt from "bcrypt";
 import swaggerJsdoc from "swagger-jsdoc";
 import swaggerUiExpress from "swagger-ui-express";
 import { usersRouter } from "./routes/users.router.js";
-import env from "../../config.js";
+import env from "../config.js";
 
 const app = express();
 app.use(cookieParser());
