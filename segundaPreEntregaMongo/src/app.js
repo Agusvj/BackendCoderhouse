@@ -40,7 +40,7 @@ app.use(
   })
 );
 const port = 8080;
-
+console.log(env.mongoUrl);
 connectMongo();
 
 app.use(express.urlencoded({ extended: true }));
