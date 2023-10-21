@@ -18,7 +18,7 @@ authRouter.get("/register", (req, res) => {
 authRouter.post(
   "/register",
   passport.authenticate("register", {
-    failureRedirect: "api/sessions/failregister",
+    failureRedirect: "/failregister",
   }),
   authController.register
 );
