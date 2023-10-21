@@ -71,7 +71,8 @@ export function initializePassport() {
       {
         clientID: "Iv1.741b89e80a399a39",
         clientSecret: "b2e664111c374d3f72b4da5698a9618efa9a97d1",
-        callbackURL: "http://localhost:8080/api/sessions/githubcallback",
+        callbackURL:
+          "https://backendvillanueva.onrender.com/api/sessions/githubcallback",
       },
       async (accesToken, _, profile, done) => {
         try {

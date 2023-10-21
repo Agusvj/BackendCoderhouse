@@ -62,7 +62,7 @@ app.use("/apidocs", swaggerUiExpress.serve, swaggerUiExpress.setup(specs));
 // const productManagerMongo = new ProductManagerMongo();
 
 const httpServer = app.listen(port, () => {
-  console.log(`Server running on port http://localhost:${port}`);
+  console.log(`Server running on port ${port}`);
 });
 
 const socketServer = new Server(httpServer);
@@ -116,7 +116,7 @@ app.post("/recover-form", async (req, res) => {
     from: process.env.GOOGLE_EMAIL,
     to: email,
     subject: "Recuperar contraseña",
-    html: `<a href="http://localhost:8080/recover-pass?code=${code}&email=${email}"> Tu codigo: ${code} </a>`,
+    html: `<a href="https://backendvillanueva.onrender.com/recover-pass?code=${code}&email=${email}"> Tu codigo: ${code} </a>`,
   });
 
   res.send("Email sent, check your inbox");
