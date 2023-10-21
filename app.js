@@ -1,30 +1,30 @@
 import express from "express";
 import handlebars from "express-handlebars";
-import __dirname from "./utils.js";
-import { productManagerRouter } from "./routes/products.router.js";
+import __dirname from "./src/utils.js";
+import { productManagerRouter } from "./src/routes/products.router.js";
 // import { ProductManagerMongo } from "./dao/services/productManagerMongo.js";
 // import { MsgModel } from "./dao/models/msgs.model.js";
-import { cartsRouter } from "./routes/carts.router.js";
-import { viewsRouter } from "./routes/views.router.js";
+import { cartsRouter } from "./src/routes/carts.router.js";
+import { viewsRouter } from "./src/routes/views.router.js";
 import { Server } from "socket.io";
-import { connectMongo } from "./utils.js";
-import { authRouter } from "./routes/auth.router.js";
+import { connectMongo } from "./src/utils.js";
+import { authRouter } from "./src/routes/auth.router.js";
 import cookieParser from "cookie-parser";
 import session from "express-session";
 import MongoStore from "connect-mongo";
-import { initializePassport } from "./config/passport.config.js";
+import { initializePassport } from "./src/config/passport.config.js";
 import passport from "passport";
-import errorHandler from "./middlewares/error.js";
-import { addLogger } from "./middlewares/logger.js";
-import { sendEmailTransport } from "./utils.js";
+import errorHandler from "./src/middlewares/error.js";
+import { addLogger } from "./src/middlewares/logger.js";
+import { sendEmailTransport } from "./src/utils.js";
 import crypto from "crypto";
-import { RecoverCodesSchema } from "./dao/models/recover-codes.js";
-import { userModel } from "./dao/models/users.model.js";
+import { RecoverCodesSchema } from "./src/dao/models/recover-codes.js";
+import { userModel } from "./src/dao/models/users.model.js";
 import bcrypt from "bcrypt";
 import swaggerJsdoc from "swagger-jsdoc";
 import swaggerUiExpress from "swagger-ui-express";
-import { usersRouter } from "./routes/users.router.js";
-import env from "../config.js";
+import { usersRouter } from "./src/routes/users.router.js";
+import env from "./config.js";
 
 const app = express();
 app.use(cookieParser());
@@ -40,7 +40,7 @@ app.use(
   })
 );
 const port = 8080;
-console.log(env.mongoUrl);
+console.log("mongo", env.mongoUrl);
 connectMongo();
 
 app.use(express.urlencoded({ extended: true }));
